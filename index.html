@@ -1,0 +1,2148 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Práctica examen de ampliación</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+      /* Custom scrollbar for horizontal pill navigation on mobile */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .fade-in {
+        animation: fadeIn 0.25s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <!-- Sticky Top Header with Exam Metadata & Live Progress -->
+    <header
+      class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+        >
+          <!-- School & Exam Info -->
+          <div class="flex items-start sm:items-center gap-3">
+            <div
+              class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center shadow-md shrink-0"
+            >
+              <i class="fa-solid fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200"
+                >
+                  Práctica diseñada y elaborada por Josbrevar07
+                </span>
+                <span class="text-xs font-semibold text-slate-500"> </span>
+              </div>
+              <h1
+                class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight mt-0.5"
+              >
+                Convo English Exam — 10th Grade
+              </h1>
+              <p class="text-xs text-slate-500">
+                <span class="font-semibold text-slate-700"></span>
+                • Guía Interactiva por Indicadores
+              </p>
+            </div>
+          </div>
+
+          <!-- Score & Progress Tracker -->
+          <div
+            class="flex items-center justify-between sm:justify-end gap-3 bg-slate-100/80 px-3.5 py-2 rounded-xl border border-slate-200/80"
+          >
+            <div class="flex flex-col min-w-[130px] sm:min-w-[160px]">
+              <div
+                class="flex justify-between text-xs font-semibold text-slate-600 mb-1"
+              >
+                <span>Progreso Total</span>
+                <span id="progress-text">0 / 37 pts</span>
+              </div>
+              <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div
+                  id="progress-bar"
+                  class="h-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-300"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+            <div class="h-8 w-px bg-slate-300"></div>
+            <div class="text-center">
+              <span
+                class="block text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                >Nota Est.</span
+              >
+              <span
+                id="grade-badge"
+                class="text-sm font-extrabold text-indigo-700"
+                >0%</span
+              >
+            </div>
+            <button
+              onclick="openResetModal()"
+              title="Reiniciar progreso"
+              class="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+            >
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile / Tablet Horizontal Indicator Pill Bar -->
+      <div
+        class="lg:hidden border-t border-slate-100 bg-slate-50/90 px-3 py-2 overflow-x-auto no-scrollbar"
+      >
+        <div id="mobile-nav-pills" class="flex items-center gap-2 w-max">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Desktop Sidebar Navigation (9 Indicators) -->
+        <aside
+          class="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-24 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+        >
+          <div class="p-4 bg-slate-900 text-white">
+            <h2
+              class="text-sm font-bold uppercase tracking-wider flex items-center gap-2"
+            >
+              <i class="fa-solid fa-list-check text-blue-400"></i>
+              Temario Oficial (9 Indicadores)
+            </h2>
+            <p class="text-xs text-slate-300 mt-1">
+              Selecciona un indicador para estudiar y practicar.
+            </p>
+          </div>
+          <nav
+            id="desktop-nav-list"
+            class="divide-y divide-slate-100 max-h-[calc(100vh-12rem)] overflow-y-auto"
+          >
+            <!-- Populated dynamically via JS -->
+          </nav>
+        </aside>
+
+        <!-- Active Indicator Content Area -->
+        <section class="lg:col-span-8 xl:col-span-9 space-y-5">
+          <!-- Indicator Header Card -->
+          <div
+            id="indicator-header-card"
+            class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6"
+          >
+            <!-- Populated dynamically via JS -->
+          </div>
+
+          <!-- Mode Switcher Tabs: 1. Explicación en Español vs 2. Ejercicios Prácticos -->
+          <div
+            class="bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-2 gap-2"
+          >
+            <button
+              id="tab-btn-study"
+              onclick="switchTab('study')"
+              class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all bg-blue-600 text-white shadow-sm"
+            >
+              <i class="fa-solid fa-book-open"></i>
+              <span>1. Guía de Estudio (Español)</span>
+            </button>
+            <button
+              id="tab-btn-practice"
+              onclick="switchTab('practice')"
+              class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>2. Práctica Interactiva</span>
+              <span
+                id="tab-practice-count"
+                class="ml-1 text-xs px-2 py-0.5 rounded-full bg-slate-200 text-slate-700"
+                >0/4</span
+              >
+            </button>
+          </div>
+
+          <!-- Dynamic Tab Content Container -->
+          <div id="tab-content-area" class="fade-in">
+            <!-- Populated dynamically via JS -->
+          </div>
+
+          <!-- Bottom Navigation Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button
+              id="prev-ind-btn"
+              onclick="changeIndicator(-1)"
+              class="px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition flex items-center gap-2 shadow-sm"
+            >
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Indicador Anterior</span>
+            </button>
+
+            <button
+              id="switch-to-practice-cta"
+              onclick="switchTab('practice')"
+              class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition flex items-center gap-2 shadow-sm"
+            >
+              <span>Ir a Ejercicios Prácticos</span>
+              <i class="fa-solid fa-bolt"></i>
+            </button>
+
+            <button
+              id="next-ind-btn"
+              onclick="changeIndicator(1)"
+              class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm disabled:opacity-40 disabled:pointer-events-none transition flex items-center gap-2 shadow-sm"
+            >
+              <span>Siguiente Indicador</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Custom Reset Confirmation Modal (No native confirm/alert used) -->
+    <div
+      id="reset-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4"
+    >
+      <div
+        class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 fade-in"
+      >
+        <div
+          class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl mb-4"
+        >
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="text-lg font-extrabold text-slate-900">
+          ¿Reiniciar todo el progreso?
+        </h3>
+        <p class="text-sm text-slate-600 mt-1.5">
+          Se borrarán tus respuestas guardadas y tu puntuación volverá a 0 para
+          que puedas practicar todo el examen desde el inicio.
+        </p>
+        <div class="mt-6 flex justify-end gap-3">
+          <button
+            onclick="closeResetModal()"
+            class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50"
+          >
+            Cancelar
+          </button>
+          <button
+            onclick="confirmResetProgress()"
+            class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm"
+          >
+            Sí, reiniciar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Footer (Josbrevar07) -->
+    <footer class="mt-12 bg-slate-900 text-slate-300 border-t border-slate-800">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <p class="text-xs sm:text-sm text-center sm:text-left font-medium">
+          Designed by
+          <span class="text-white font-bold">Josbrevar07</span> • Práctica en
+          línea diseñada y elaborada en Santiago de Puriscal, San José, Costa
+          Rica
+        </p>
+        <div class="flex items-center gap-4 text-lg">
+          <a
+            href="https://wa.me/50686917316"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp"
+            class="w-9 h-9 rounded-full bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white flex items-center justify-center transition"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+          <a
+            href="https://www.youtube.com/@josbrevar0773"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            class="w-9 h-9 rounded-full bg-slate-800 hover:bg-red-600 text-slate-200 hover:text-white flex items-center justify-center transition"
+          >
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+          <a
+            href="https://clases-de-manejo-personalizadas.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Sitio Web"
+            class="w-9 h-9 rounded-full bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white flex items-center justify-center transition"
+          >
+            <i class="fa-solid fa-globe"></i>
+          </a>
+          <a
+            href="https://www.instagram.com/josbrevar07"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            class="w-9 h-9 rounded-full bg-slate-800 hover:bg-pink-600 text-slate-200 hover:text-white flex items-center justify-center transition"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a
+            href="https://www.facebook.com/josue.brenesvargas"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            class="w-9 h-9 rounded-full bg-slate-800 hover:bg-blue-500 text-slate-200 hover:text-white flex items-center justify-center transition"
+          >
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Application Logic & Complete Pedagogical Content -->
+    <script>
+      // Complete dataset for all 9 indicators matching the official temario
+      const indicatorsData = [
+        {
+          id: 1,
+          shortTitle: "Vocabulario: Éxito, Cuerpo y Sustantivos Abstractos",
+          officialIndicator:
+            "To identify and use vocabulary related to success and failure, the human body, and abstract nouns in the appropriate context.",
+          contents: "Vocabulary: Units 3, 4, and 6.",
+          references: {
+            sb: "Student's book pages 35, 39, 47, 51, 71, and 75.",
+            wb: "Workbook pages 27, 31, 39, 43, 59, and 63.",
+          },
+          icon: "fa-trophy",
+          color: "blue",
+          studySections: [
+            {
+              title: "1. Éxito y Fracaso (Success and Failure)",
+              summary:
+                "Este vocabulario describe metas, logros, obstáculos y cómo las personas superan dificultades.",
+              items: [
+                {
+                  term: "Achieve / Accomplish",
+                  meaning: "Lograr / alcanzar una meta importante.",
+                  example:
+                    "She worked hard to achieve her dream of becoming a doctor.",
+                },
+                {
+                  term: "Overcome",
+                  meaning: "Superar un obstáculo, miedo o problema.",
+                  example: "He had to overcome many financial difficulties.",
+                },
+                {
+                  term: "Setback",
+                  meaning: "Contratiempo o retroceso temporal.",
+                  example:
+                    "Failing the first test was a minor setback, not the end.",
+                },
+                {
+                  term: "Breakthrough",
+                  meaning: "Avance decisivo o descubrimiento importante.",
+                  example:
+                    "Scientists made a major breakthrough in cancer research.",
+                },
+                {
+                  term: "Thrive / Fulfill",
+                  meaning: "Prosperar / cumplir con un propósito o potencial.",
+                  example:
+                    "Students thrive when they receive constructive feedback.",
+                },
+              ],
+            },
+            {
+              title: "2. El Cuerpo Humano y sus Funciones (The Human Body)",
+              summary:
+                "Palabras relacionadas con sistemas del cuerpo, salud, postura y acciones físicas.",
+              items: [
+                {
+                  term: "Immune system",
+                  meaning:
+                    "Sistema inmunológico (defiende al cuerpo de enfermedades).",
+                  example:
+                    "Vitamin C and good sleep strengthen your immune system.",
+                },
+                {
+                  term: "Posture / Spine",
+                  meaning: "Postura / columna vertebral.",
+                  example:
+                    "Sitting straight improves your posture and protects your spine.",
+                },
+                {
+                  term: "Sprint / Stamina",
+                  meaning: "Correr a máxima velocidad / resistencia física.",
+                  example: "Marathon runners need incredible stamina.",
+                },
+                {
+                  term: "Recover / Heal",
+                  meaning: "Recuperarse / sanar de una lesión o enfermedad.",
+                  example:
+                    "It took him three weeks to recover from the ankle injury.",
+                },
+              ],
+            },
+            {
+              title: "3. Sustantivos Abstractos (Abstract Nouns)",
+              summary:
+                "Los sustantivos abstractos nombran ideas, cualidades o estados que no se pueden tocar físicamente. Muchos terminan en -ence, -tion, -ness, -th.",
+              items: [
+                {
+                  term: "Resilience",
+                  meaning:
+                    "Resiliencia (capacidad de recuperarse ante la adversidad).",
+                  example: "Her resilience helped the team stay positive.",
+                },
+                {
+                  term: "Determination",
+                  meaning: "Determinación / firmeza.",
+                  example:
+                    "With enough determination, you can pass the Convo exam.",
+                },
+                {
+                  term: "Failure vs. Growth",
+                  meaning: "Fracaso vs. Crecimiento personal.",
+                  example:
+                    "Every failure is an opportunity for personal growth.",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "1-1",
+              type: "mcq",
+              question:
+                "Even though the project suffered an unexpected ________ in April, the team never gave up and finished on time.",
+              options: ["setback", "posture", "spine", "stamina"],
+              answer: 0,
+              explanation:
+                "¡Correcto! 'Setback' significa contratiempo o retroceso temporal, lo cual encaja perfectamente con 'never gave up' (nunca se rindieron).",
+            },
+            {
+              id: "1-2",
+              type: "mcq",
+              question:
+                "Getting at least eight hours of sleep helps strengthen your ________ so you don't catch colds easily.",
+              options: ["breakthrough", "immune system", "failure", "growth"],
+              answer: 1,
+              explanation:
+                "El 'immune system' (sistema inmunológico) es el encargado de defender al cuerpo contra enfermedades como los resfriados.",
+            },
+            {
+              id: "1-3",
+              type: "mcq",
+              question:
+                "Which word in the following sentence is an abstract noun? 'True resilience requires patience and courage.'",
+              options: ["True", "requires", "resilience", "and"],
+              answer: 2,
+              explanation:
+                "'Resilience' (resiliencia) es un sustantivo abstracto porque representa una cualidad intangible.",
+            },
+            {
+              id: "1-4",
+              type: "mcq",
+              question:
+                "After months of research in the laboratory, the biologists finally made a huge ________.",
+              options: ["breakthrough", "injury", "setback", "posture"],
+              answer: 0,
+              explanation:
+                "'Breakthrough' significa un gran avance o descubrimiento científico tras mucho esfuerzo.",
+            },
+          ],
+        },
+        {
+          id: 2,
+          shortTitle: "Vocabulario: Ciudad, Crimen, Ambiente y Arte",
+          officialIndicator:
+            "To identify vocabulary related to city development, crime, the environment, arts and culture, and abstract concepts according to their context.",
+          contents: "Vocabulary: Units 5, 6, 7 and 8.",
+          references: {
+            sb: "Student's book pages 59, 63, 71, 75, 83, 87, 95, and 99.",
+            wb: "Workbook pages 49, 53, 59, 63, 71, 75, 81, and 85.",
+          },
+          icon: "fa-city",
+          color: "emerald",
+          studySections: [
+            {
+              title: "1. Desarrollo Urbano (City Development)",
+              summary:
+                "Términos sobre planificación de ciudades, transporte y espacios públicos.",
+              items: [
+                {
+                  term: "Infrastructure",
+                  meaning:
+                    "Infraestructura (carreteras, puentes, servicios básicos).",
+                  example:
+                    "The city is investing millions in modern public infrastructure.",
+                },
+                {
+                  term: "Urban sprawl",
+                  meaning: "Expansión urbana descontrolada hacia las afueras.",
+                  example:
+                    "Urban sprawl often reduces surrounding agricultural land.",
+                },
+                {
+                  term: "Congestion / Pedestrian zone",
+                  meaning: "Congestión vial / zona peatonal.",
+                  example:
+                    "Creating a pedestrian zone reduced traffic congestion downtown.",
+                },
+              ],
+            },
+            {
+              title: "2. Crimen y Justicia (Crime)",
+              summary: "Vocabulario legal y de seguridad ciudadana.",
+              items: [
+                {
+                  term: "Vandalism",
+                  meaning: "Vandalismo (destrucción intencional de propiedad).",
+                  example:
+                    "Security cameras helped reduce vandalism in the park.",
+                },
+                {
+                  term: "Witness / Verdict",
+                  meaning: "Testigo / veredicto del jurado o juez.",
+                  example:
+                    "The witness described the suspect before the final verdict.",
+                },
+                {
+                  term: "Deterrence / Offender",
+                  meaning: "Disuasión (prevención del delito) / infractor.",
+                  example:
+                    "Better street lighting acts as a strong deterrence against crime.",
+                },
+              ],
+            },
+            {
+              title:
+                "3. Medio Ambiente, Arte y Cultura (Environment, Arts & Culture)",
+              summary: "Conceptos clave sobre ecología y patrimonio cultural.",
+              items: [
+                {
+                  term: "Sustainability / Renewable",
+                  meaning: "Sostenibilidad / energía renovable.",
+                  example: "Solar panels promote environmental sustainability.",
+                },
+                {
+                  term: "Deforestation / Emissions",
+                  meaning: "Deforestación / emisiones de gases.",
+                  example:
+                    "We must cut carbon emissions to fight climate change.",
+                },
+                {
+                  term: "Exhibition / Heritage / Masterpiece",
+                  meaning: "Exposición / patrimonio cultural / obra maestra.",
+                  example:
+                    "The museum opened an exhibition celebrating national heritage.",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "2-1",
+              type: "mcq",
+              question:
+                "To reduce traffic ________ in the city center, the municipality created a wide pedestrian zone.",
+              options: ["congestion", "verdict", "heritage", "vandalism"],
+              answer: 0,
+              explanation:
+                "'Congestion' se refiere al congestionamiento vial o tráfico excesivo en el centro de la ciudad.",
+            },
+            {
+              id: "2-2",
+              type: "mcq",
+              question:
+                "The ________ gave a detailed description of the robbery to the police officers at the scene.",
+              options: ["witness", "emission", "masterpiece", "sprawl"],
+              answer: 0,
+              explanation:
+                "Un 'witness' (testigo) es la persona que presencia un delito y declara lo sucedido.",
+            },
+            {
+              id: "2-3",
+              type: "mcq",
+              question:
+                "Switching to ________ energy sources such as wind and solar power helps protect the planet.",
+              options: ["renewable", "offender", "urban", "criminal"],
+              answer: 0,
+              explanation:
+                "'Renewable' (renovable) describe fuentes de energía limpia e inagotable como la solar o eólica.",
+            },
+            {
+              id: "2-4",
+              type: "mcq",
+              question:
+                "The National Museum is hosting a special ________ featuring paintings by famous Costa Rican artists.",
+              options: [
+                "exhibition",
+                "deterrence",
+                "deforestation",
+                "infrastructure",
+              ],
+              answer: 0,
+              explanation:
+                "Una 'exhibition' (exhibición o exposición) es el evento donde se muestran obras de arte al público.",
+            },
+          ],
+        },
+        {
+          id: 3,
+          shortTitle:
+            "Gramática (Reconocimiento): Tiempos, Modales y Cláusulas",
+          officialIndicator:
+            "To recognize the correct grammatical structures in sentences using perfect tenses, narrative tenses, reporting verbs, relative clauses, future forms, conditionals, and modal verbs.",
+          contents: "Grammar: Units 1, 2, 3, 4, 5, 6, and 8",
+          references: {
+            sb: "Student's book pages 11, 15, 23, 27, 35, 39, 47, 51, 59, 63, 71, 75, 95, and 99.",
+            wb: "Workbook pages 8, 12, 18, 22, 28, 32, 40, 44, 50, 54, 60, 64, 82, and 86.",
+          },
+          icon: "fa-magnifying-glass-chart",
+          color: "indigo",
+          studySections: [
+            {
+              title:
+                "1. Tiempos Perfectos y Narrativos (Perfect & Narrative Tenses)",
+              summary:
+                "Claves visuales para reconocerlos en una oración del examen:",
+              items: [
+                {
+                  term: "Present Perfect (have/has + V3)",
+                  meaning:
+                    "Acción pasada con relevancia presente o duración (for, since, already, yet).",
+                  example: "She has lived in San José since 2018.",
+                },
+                {
+                  term: "Past Perfect (had + V3)",
+                  meaning:
+                    "El 'pasado del pasado': ocurrió ANTES de otra acción en pasado.",
+                  example: "When we arrived, the train had already left.",
+                },
+                {
+                  term: "Past Continuous vs. Past Simple",
+                  meaning:
+                    "Acción larga en progreso (was/were + -ing) interrumpida por acción corta (Past Simple).",
+                  example: "I was studying when the lights went out.",
+                },
+              ],
+            },
+            {
+              title: "2. Reporting Verbs y Relative Clauses",
+              summary:
+                "Cómo reportar lo que alguien dijo y cómo unir ideas con pronombres relativos.",
+              items: [
+                {
+                  term: "Reporting Verbs",
+                  meaning:
+                    "admit/deny + -ing | refuse/promise + to + verbo | warn/advise + persona + to.",
+                  example:
+                    "He admitted breaking the window. / She warned us not to be late.",
+                },
+                {
+                  term: "Relative Clauses",
+                  meaning:
+                    "who (personas), which (cosas), whose (posesión), where (lugares).",
+                  example:
+                    "The scientist whose discovery saved lives won the prize.",
+                },
+              ],
+            },
+            {
+              title: "3. Formas Futuras, Condicionales y Verbos Modales",
+              summary: "Diferencias estructurales esenciales:",
+              items: [
+                {
+                  term: "Future Forms",
+                  meaning:
+                    "Will (predicción/decisión espontánea) | Going to (plan) | Future Perfect (will have + V3: completado antes de un punto futuro).",
+                  example: "By 2030, engineers will have built greener cities.",
+                },
+                {
+                  term: "Conditionals (1st, 2nd, 3rd)",
+                  meaning:
+                    "1st: If + present, will + V | 2nd: If + past, would + V | 3rd: If + had V3, would have + V3.",
+                  example: "If I had studied harder, I would have passed.",
+                },
+                {
+                  term: "Modal Verbs (Deduction & Obligation)",
+                  meaning:
+                    "must have + V3 (certeza pasada), might/could (posibilidad), should/ought to (consejo).",
+                  example:
+                    "He isn't answering; he must have left his phone at home.",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "3-1",
+              type: "mcq",
+              question:
+                "Identify the grammatically CORRECT sentence using the Past Perfect and Past Simple:",
+              options: [
+                "By the time the ambulance arrived, the paramedics had already stabilized the patient.",
+                "By the time the ambulance had arrived, the paramedics already stabilized the patient.",
+                "By the time the ambulance arrives, the paramedics had stabilized the patient.",
+                "By the time the ambulance was arrive, the paramedics have stabilized the patient.",
+              ],
+              answer: 0,
+              explanation:
+                "La acción que ocurrió primero lleva Past Perfect ('had already stabilized') y la acción posterior lleva Past Simple ('arrived').",
+            },
+            {
+              id: "3-2",
+              type: "mcq",
+              question:
+                "Which sentence uses the correct pattern with a reporting verb?",
+              options: [
+                "The suspect denied to steal the painting.",
+                "The suspect denied stealing the painting.",
+                "The suspect denied steal the painting.",
+                "The suspect denied for stealing the painting.",
+              ],
+              answer: 1,
+              explanation:
+                "El verbo 'deny' (negar) siempre va seguido de un gerundio (-ing): 'denied stealing'.",
+            },
+            {
+              id: "3-3",
+              type: "mcq",
+              question:
+                "Choose the sentence that correctly uses a relative pronoun for possession:",
+              options: [
+                "That is the architect which designs won an international award.",
+                "That is the architect who designs won an international award.",
+                "That is the architect whose designs won an international award.",
+                "That is the architect where designs won an international award.",
+              ],
+              answer: 2,
+              explanation:
+                "'Whose' indica posesión ('cuyos diseños'). Se usa tanto para personas como para cosas.",
+            },
+            {
+              id: "3-4",
+              type: "mcq",
+              question:
+                "Recognize the correct Third Conditional structure (hypothetical past):",
+              options: [
+                "If the city had invested in public transport, traffic would have decreased.",
+                "If the city invested in public transport, traffic would have decreased.",
+                "If the city had invested in public transport, traffic will decrease.",
+                "If the city would have invested in public transport, traffic had decreased.",
+              ],
+              answer: 0,
+              explanation:
+                "El Tercer Condicional sigue la fórmula: If + Past Perfect (had invested), would have + Past Participle (would have decreased).",
+            },
+            {
+              id: "3-5",
+              type: "mcq",
+              question:
+                "Which modal structure expresses logical certainty about a past event?",
+              options: [
+                "The streets are completely flooded; it must have rained heavily last night.",
+                "The streets are completely flooded; it should rain heavily last night.",
+                "The streets are completely flooded; it can't rain heavily last night.",
+                "The streets are completely flooded; it must rain heavily last night.",
+              ],
+              answer: 0,
+              explanation:
+                "'Must have + participio pasado (rained)' expresa una deducción lógica casi segura sobre algo que ocurrió en el pasado.",
+            },
+          ],
+        },
+        {
+          id: 4,
+          shortTitle:
+            "Gramática (Uso): Voz Pasiva, Infinitivos y Question Tags",
+          officialIndicator:
+            "To use appropriate grammatical structures, including perfect tenses, relative clauses, infinitive structures, passive voice, conditionals, modal verbs, and question tags.",
+          contents: "Grammar: Units 2, 3, 4, 5, 7, 8, and 9.",
+          references: {
+            sb: "Student's book pages 23, 27, 35, 39, 47, 51, 59, 63, 83, 87, 95, and 99.",
+            wb: "Workbook pages 18, 22, 28, 32, 40, 44, 50, 54, 72, 76, 82, 86, 92, 96.",
+          },
+          icon: "fa-gears",
+          color: "violet",
+          studySections: [
+            {
+              title: "1. Voz Pasiva (Passive Voice)",
+              summary:
+                "Se usa cuando la acción es más importante que quién la realiza. Fórmula: Sujeto + verbo 'to be' (conjugado) + Participio Pasado (V3).",
+              items: [
+                {
+                  term: "Present Simple Passive",
+                  meaning: "am / is / are + V3",
+                  example: "Thousands of trees are planted every year.",
+                },
+                {
+                  term: "Past Simple Passive",
+                  meaning: "was / were + V3",
+                  example: "The ancient bridge was built in 1890.",
+                },
+                {
+                  term: "Present Perfect / Future Passive",
+                  meaning: "has/have been + V3 | will be + V3",
+                  example: "The new hospital will be opened next month.",
+                },
+              ],
+            },
+            {
+              title: "2. Estructuras de Infinitivo vs. Gerundio",
+              summary:
+                "Ciertos verbos y adjetivos exigen 'to + infinitive' o '-ing'.",
+              items: [
+                {
+                  term: "Adjective + to + infinitive",
+                  meaning:
+                    "It is essential / difficult / important + to + verbo.",
+                  example: "It is important to protect endangered species.",
+                },
+                {
+                  term: "Verbs + to + infinitive",
+                  meaning: "decide, plan, hope, manage, agree, afford + to.",
+                  example: "They managed to finish the report before noon.",
+                },
+              ],
+            },
+            {
+              title: "3. Question Tags (Preguntas de Confirmación)",
+              summary:
+                "Regla de oro: Oración AFIRMATIVA → Tag NEGATIVA. Oración NEGATIVA → Tag AFIRMATIVA. Usa el mismo auxiliar.",
+              items: [
+                {
+                  term: "Affirmative → Negative",
+                  meaning:
+                    "You have finished, haven't you? / She speaks French, doesn't she?",
+                  example: "The exam is on November 30th, isn't it?",
+                },
+                {
+                  term: "Negative → Affirmative",
+                  meaning:
+                    "They didn't call, did they? / He won't be late, will he?",
+                  example: "You haven't seen my keys, have you?",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "4-1",
+              type: "mcq",
+              question:
+                "Complete in Passive Voice: 'The new solar power plant ________ by the president next week.'",
+              options: [
+                "will be inaugurated",
+                "will inaugurate",
+                "is inaugurating",
+                "has inaugurated",
+              ],
+              answer: 0,
+              explanation:
+                "Como 'next week' indica futuro y la planta recibe la acción, usamos Future Passive: 'will be + participio (inaugurated)'.",
+            },
+            {
+              id: "4-2",
+              type: "mcq",
+              question:
+                "Choose the correct Question Tag: 'Your classmates haven't submitted the final report yet, ________?'",
+              options: ["have they", "haven't they", "do they", "didn't they"],
+              answer: 0,
+              explanation:
+                "La oración principal es negativa ('haven't submitted'), por lo tanto la question tag debe ser afirmativa con el mismo auxiliar: 'have they?'.",
+            },
+            {
+              id: "4-3",
+              type: "mcq",
+              question:
+                "Complete with the appropriate infinitive structure: 'Despite the heavy rain, the hikers managed ________ the summit safely.'",
+              options: ["to reach", "reaching", "reach", "reached"],
+              answer: 0,
+              explanation:
+                "El verbo 'manage' (lograr/arreglárselas) siempre va seguido de infinitivo con 'to': 'managed to reach'.",
+            },
+            {
+              id: "4-4",
+              type: "mcq",
+              question:
+                "Select the correct Second Conditional form: 'If our school ________ more recycling bins, students would separate waste better.'",
+              options: ["had", "has", "will have", "would have"],
+              answer: 0,
+              explanation:
+                "En el Second Conditional (situación hipotética presente), la cláusula con 'If' lleva Past Simple: 'had'.",
+            },
+            {
+              id: "4-5",
+              type: "mcq",
+              question:
+                "Choose the correct Question Tag: 'She rarely misses an English class, ________?'",
+              options: ["does she", "doesn't she", "is she", "isn't she"],
+              answer: 0,
+              explanation:
+                "¡Ojo con palabras negativas como 'rarely', 'never' o 'seldom'! Hacen que la oración sea negativa, así que la tag es afirmativa: 'does she?'.",
+            },
+          ],
+        },
+        {
+          id: 5,
+          shortTitle: "Formación de Palabras: Prefijos, Sufijos y Derivación",
+          officialIndicator:
+            "To form and use appropriate vocabulary such as prefixes, suffixes, noun formation, adjective formation, and verb forms according to the context of a text.",
+          contents: "Vocabulary: Units 1, 2, 3, 7 and 8.",
+          references: {
+            sb: "Student's book pages 11, 15, 23, 27, 35, 39, 83, 87, 95, and 99.",
+            wb: "Workbook pages 7, 11, 17, 21, 27, 31, 71, 75, 81, 85.",
+          },
+          icon: "fa-puzzle-piece",
+          color: "amber",
+          studySections: [
+            {
+              title: "1. Prefijos Comunes (Prefixes — Cambian el significado)",
+              summary:
+                "Se añaden al inicio de una palabra para indicar negación, repetición o exceso:",
+              items: [
+                {
+                  term: "un- / in- / im- / dis-",
+                  meaning:
+                    "Negación u opuesto: unreliable (poco confiable), impossible (imposible), dishonest (deshonesto).",
+                  example:
+                    "It is irresponsible to ignore environmental warnings.",
+                },
+                {
+                  term: "re- / over- / mis-",
+                  meaning:
+                    "re- (otra vez: rebuild), over- (en exceso: overcrowded), mis- (mal: misunderstand).",
+                  example: "The subway is always overcrowded during rush hour.",
+                },
+              ],
+            },
+            {
+              title: "2. Formación de Sustantivos (Noun Formation)",
+              summary:
+                "Sufijos que convierten verbos o adjetivos en sustantivos:",
+              items: [
+                {
+                  term: "-tion / -sion",
+                  meaning:
+                    "educate → education | decide → decision | pollute → pollution.",
+                  example:
+                    "Air pollution is a serious threat to public health.",
+                },
+                {
+                  term: "-ment / -ness / -ity",
+                  meaning:
+                    "develop → development | happy → happiness | creative → creativity.",
+                  example:
+                    "Sustainable development balances economy and nature.",
+                },
+              ],
+            },
+            {
+              title: "3. Formación de Adjetivos y Verbos (Adjectives & Verbs)",
+              summary:
+                "Cómo identificar si el espacio en blanco pide un adjetivo (describe sustantivos) o un verbo (acción):",
+              items: [
+                {
+                  term: "Adjetivos (-ous, -able, -ful, -less, -ive)",
+                  meaning:
+                    "danger → dangerous | rely → reliable | harm → harmful/harmless | create → creative.",
+                  example: "Solar energy is a reliable and clean alternative.",
+                },
+                {
+                  term: "Verbos (-ize, -en, -ify)",
+                  meaning:
+                    "modern → modernize | strength → strengthen | simple → simplify.",
+                  example: "We need to modernize our public transportation.",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "5-1",
+              type: "word_formation",
+              prompt:
+                "Transforma la palabra raíz entre paréntesis para completar la oración (Sustantivo):",
+              sentenceBefore: "The rapid ",
+              rootWord: "DEVELOP",
+              sentenceAfter:
+                " of technology has transformed modern classrooms.",
+              acceptedAnswers: ["development"],
+              hint: "Necesitas un sustantivo terminado en -ment.",
+              explanation:
+                "Después del adjetivo 'rapid' necesitamos un sustantivo: 'development' (desarrollo).",
+            },
+            {
+              id: "5-2",
+              type: "word_formation",
+              prompt: "Forma el adjetivo negativo usando el prefijo correcto:",
+              sentenceBefore: "Leaving trash in national parks is completely ",
+              rootWord: "RESPONSIBLE",
+              sentenceAfter: " and damages wildlife.",
+              acceptedAnswers: ["irresponsible"],
+              hint: "Palabras que empiezan con 'r' suelen usar el prefijo 'ir-'.",
+              explanation:
+                "El opuesto de 'responsible' se forma con el prefijo 'ir-': 'irresponsible' (irresponsable).",
+            },
+            {
+              id: "5-3",
+              type: "word_formation",
+              prompt: "Forma un adjetivo a partir del sustantivo raíz:",
+              sentenceBefore: "Many single-use plastics are extremely ",
+              rootWord: "HARM",
+              sentenceAfter: " to marine ecosystems.",
+              acceptedAnswers: ["harmful"],
+              hint: "Usa el sufijo -ful (lleno de daño / perjudicial).",
+              explanation:
+                "'Harmful' (perjudicial/dañino) es el adjetivo que describe a 'single-use plastics'.",
+            },
+            {
+              id: "5-4",
+              type: "word_formation",
+              prompt: "Transforma el sustantivo en un verbo:",
+              sentenceBefore: "Regular exercise and balanced nutrition help ",
+              rootWord: "STRENGTH",
+              sentenceAfter: " your muscles and bones.",
+              acceptedAnswers: ["strengthen"],
+              hint: "Añade el sufijo verbal -en al sustantivo 'strength'.",
+              explanation:
+                "Después de 'help' necesitamos un verbo en forma base: 'strengthen' (fortalecer).",
+            },
+          ],
+        },
+        {
+          id: 6,
+          shortTitle:
+            "Comprensión: Información Específica, Empleos y Opiniones",
+          officialIndicator:
+            "To identify the specific information, main ideas, personal experiences, professional requirements, job responsibilities, and the speaker's opinions by selecting the correct answers.",
+          contents: "Vocabulary: Units 3, 4, and 9",
+          references: {
+            sb: "Student's book pages 35, 39, 47, 51, 107, and 111.",
+            wb: "Workbook pages 28, 32, 40, 44, 92, and 96.",
+          },
+          icon: "fa-briefcase",
+          color: "cyan",
+          studySections: [
+            {
+              title:
+                "1. Estrategias para Lectura y Comprensión Auditiva (Reading / Listening)",
+              summary:
+                "En el examen se evaluará tu capacidad para extraer datos precisos sobre carreras, empleos y puntos de vista:",
+              items: [
+                {
+                  term: "Scanning (Búsqueda de datos específicos)",
+                  meaning:
+                    "Lee primero la pregunta, subraya palabras clave (fechas, títulos, requisitos) y búscalas directamente en el texto.",
+                  example:
+                    "Pregunta: 'What degree is required?' → Busca 'degree', 'Bachelor's', 'qualification'.",
+                },
+                {
+                  term: "Job Responsibilities vs. Requirements",
+                  meaning:
+                    "Responsibilities = tareas del puesto (manage, coordinate, oversee). Requirements = lo que debes tener antes (experience, fluency, degree).",
+                  example:
+                    "Requirement: 2 years of experience. Responsibility: supervising staff.",
+                },
+                {
+                  term: "Speaker's Opinion vs. Fact",
+                  meaning:
+                    "Las opiniones usan frases como 'I firmly believe', 'In my view', 'It seems to me', 'Unfortunately'. Los hechos son datos comprobables.",
+                  example:
+                    "'In my view, remote work increases creativity' → Opinión del hablante.",
+                },
+              ],
+            },
+          ],
+          passage: {
+            title:
+              "Career Spotlight: Interview with Elena Rojas, Urban Sustainability Coordinator",
+            text: "When I graduated with a degree in Environmental Engineering five years ago, I never imagined I would end up leading green infrastructure projects for a major city. To qualify for my current position as Urban Sustainability Coordinator, candidates must hold at least a Bachelor's degree in environmental sciences and demonstrate strong project-management skills. On a daily basis, my main responsibilities include evaluating carbon-reduction proposals, coordinating with local architects, and overseeing community recycling programs. Although the workload can be exhausting during budget deadlines, I firmly believe that investing in green spaces is the smartest decision any city can make for its citizens' mental and physical health.",
+          },
+          exercises: [
+            {
+              id: "6-1",
+              type: "mcq",
+              question:
+                "According to the text, what is a professional REQUIREMENT to apply for Elena's position?",
+              options: [
+                "A Bachelor's degree in environmental sciences and project-management skills.",
+                "Five years of experience working as a commercial architect.",
+                "Speaking at least three foreign languages fluently.",
+                "Designing residential buildings for private companies.",
+              ],
+              answer: 0,
+              explanation:
+                "El texto indica explícitamente: 'candidates must hold at least a Bachelor's degree in environmental sciences and demonstrate strong project-management skills'.",
+            },
+            {
+              id: "6-2",
+              type: "mcq",
+              question:
+                "Which of the following is one of Elena's daily JOB RESPONSIBILITIES?",
+              options: [
+                "Evaluating carbon-reduction proposals and overseeing recycling programs.",
+                "Teaching environmental engineering at a local university.",
+                "Approving city taxes for private construction companies.",
+                "Selling solar panels to residential neighborhoods.",
+              ],
+              answer: 0,
+              explanation:
+                "Sus responsabilidades diarias incluyen: 'evaluating carbon-reduction proposals, coordinating with local architects, and overseeing community recycling programs'.",
+            },
+            {
+              id: "6-3",
+              type: "mcq",
+              question:
+                "What is Elena's personal OPINION regarding urban green spaces?",
+              options: [
+                "She believes investing in green spaces is the best choice for citizens' health.",
+                "She thinks green spaces are too expensive and impossible to maintain.",
+                "She feels green spaces are less important than building new highways.",
+                "She believes only private companies should fund public parks.",
+              ],
+              answer: 0,
+              explanation:
+                "La frase 'I firmly believe that investing in green spaces is the smartest decision...' introduce directamente la opinión de la hablante.",
+            },
+            {
+              id: "6-4",
+              type: "mcq",
+              question:
+                "What does Elena say about her personal experience with the workload?",
+              options: [
+                "It can be exhausting during budget deadlines, even though she loves her job.",
+                "She finds the job boring because there are very few projects to manage.",
+                "She plans to quit soon because she dislikes working with architects.",
+                "She has never experienced any stress since graduating five years ago.",
+              ],
+              answer: 0,
+              explanation:
+                "Elena menciona su experiencia personal: 'Although the workload can be exhausting during budget deadlines...'.",
+            },
+          ],
+        },
+        {
+          id: 7,
+          shortTitle: "Lectura: Ideas Principales, Contexto y Secuencia",
+          officialIndicator:
+            "To identify main ideas, understand contextual clues, recognize logical connections, and follow the sequence of events.",
+          contents: "Vocabulary: Units 6 and 7 | Grammar: Units 1 and 8",
+          references: {
+            sb: "Student's book pages 11, 15, 71, 75, 83, 87, 95, and 99.",
+            wb: "Workbook pages 8, 12, 59, 63, 71, 75, 81, and 85.",
+          },
+          icon: "fa-book-open-reader",
+          color: "teal",
+          studySections: [
+            {
+              title: "1. Pistas de Contexto (Contextual Clues)",
+              summary:
+                "Si encuentras una palabra desconocida en el examen, no te detengas; usa las palabras vecinas para deducir su significado:",
+              items: [
+                {
+                  term: "Definición o sinónimo cercano",
+                  meaning:
+                    "Busca comas, guiones o palabras como 'which means', 'such as', 'in other words'.",
+                  example:
+                    "The mural was ephemeral, lasting only a few days before the rain washed it away. (ephemeral = de corta duración).",
+                },
+                {
+                  term: "Contraste",
+                  meaning:
+                    "Palabras como 'unlike', 'whereas', 'however' indican el significado opuesto.",
+                  example:
+                    "Unlike his gregarious sister, Leo was shy and quiet. (gregarious = sociable).",
+                },
+              ],
+            },
+            {
+              title: "2. Conexiones Lógicas y Secuencia de Eventos",
+              summary:
+                "Conectores y tiempos verbales que marcan causa, contraste y orden cronológico:",
+              items: [
+                {
+                  term: "Contraste",
+                  meaning:
+                    "However, Nevertheless, Despite / In spite of, Although.",
+                  example:
+                    "Despite the initial protests, the cultural center became a huge success.",
+                },
+                {
+                  term: "Causa y Efecto",
+                  meaning: "Consequently, Therefore, As a result, Due to.",
+                  example:
+                    "Funding was cut; consequently, the exhibition was postponed.",
+                },
+                {
+                  term: "Secuencia",
+                  meaning:
+                    "Initially, Prior to (antes de), Subsequently (posteriormente), Eventually (finalmente), Past Perfect (had + V3).",
+                  example:
+                    "Prior to opening the gallery, workers had restored the old warehouse.",
+                },
+              ],
+            },
+          ],
+          passage: {
+            title: "From Abandoned Warehouse to Cultural Landmark",
+            text: "For nearly two decades, the old railway warehouse on 4th Avenue stood completely derelict, covered in graffiti and broken glass. Prior to 2022, several developers had proposed demolishing the building to construct a parking lot. However, a coalition of local artists and environmentalists campaigned to preserve the historic structure. Once the city council approved their proposal, volunteers spent eight months clearing debris and installing solar-powered lighting. Subsequently, muralists transformed the exterior walls into vibrant artworks celebrating indigenous heritage. Eventually, the revitalized space opened as the 'Santa Lucía Eco-Arts Hub,' attracting thousands of visitors and proving that urban renewal can protect both culture and the environment.",
+          },
+          exercises: [
+            {
+              id: "7-1",
+              type: "mcq",
+              question:
+                "Using contextual clues in the first sentence ('covered in graffiti and broken glass'), what does the word 'derelict' most likely mean?",
+              options: [
+                "In very poor, abandoned, and neglected condition",
+                "Newly renovated and luxurious",
+                "Protected by armed security guards",
+                "Crowded with tourists and shoppers",
+              ],
+              answer: 0,
+              explanation:
+                "Las pistas de contexto ('nearly two decades', 'covered in graffiti and broken glass') indican que 'derelict' significa abandonado y en mal estado.",
+            },
+            {
+              id: "7-2",
+              type: "mcq",
+              question:
+                "Which event happened FIRST according to the sequence of events in the passage?",
+              options: [
+                "Developers proposed demolishing the warehouse to build a parking lot.",
+                "Muralists painted artworks celebrating indigenous heritage.",
+                "Volunteers installed solar-powered lighting inside the building.",
+                "The Eco-Arts Hub opened to thousands of visitors.",
+              ],
+              answer: 0,
+              explanation:
+                "La expresión 'Prior to 2022' junto con el Past Perfect ('had proposed') confirma que esa propuesta ocurrió antes que todos los demás eventos.",
+            },
+            {
+              id: "7-3",
+              type: "mcq",
+              question:
+                "What logical relationship does the connector 'However' establish in the third sentence?",
+              options: [
+                "Contrast between the plan to demolish the building and the campaign to save it.",
+                "A chronological list of artists who painted the walls.",
+                "The cause of the broken glass and graffiti.",
+                "An example of solar-powered technology.",
+              ],
+              answer: 0,
+              explanation:
+                "'However' (sin embargo) introduce un contraste directo entre querer demoler el edificio y la campaña para preservarlo.",
+            },
+            {
+              id: "7-4",
+              type: "mcq",
+              question: "What is the MAIN IDEA of the entire passage?",
+              options: [
+                "Community action successfully transformed an abandoned building into a sustainable cultural center.",
+                "Parking lots are more profitable than museums in modern cities.",
+                "Graffiti is the biggest problem affecting railway stations worldwide.",
+                "Solar lighting is too expensive for historical buildings.",
+              ],
+              answer: 0,
+              explanation:
+                "La idea principal resume todo el texto: cómo la acción comunitaria transformó un almacén abandonado en un centro cultural y ecológico.",
+            },
+          ],
+        },
+        {
+          id: 8,
+          shortTitle: "Expresión Oral / Opinión: Productividad Laboral",
+          officialIndicator:
+            "To discuss and explain how different workplace strategies can improve staff productivity.",
+          contents: "Giving your opinion",
+          references: {
+            sb: "Speaking & Discussion focus (Workplace productivity & opinion expressions).",
+            wb: "Practice structuring arguments with clear reasons and examples.",
+          },
+          icon: "fa-comments",
+          color: "rose",
+          studySections: [
+            {
+              title:
+                "1. Frases Clave para Dar y Justificar tu Opinión (Giving Your Opinion)",
+              summary:
+                "Para obtener el puntaje máximo al expresar tu opinión, sigue la fórmula OREO: Opinion + Reason + Example + Opinion restatement.",
+              items: [
+                {
+                  term: "Introducir una opinión",
+                  meaning:
+                    "From my perspective... / I firmly believe that... / In my view...",
+                  example:
+                    "From my perspective, flexible schedules significantly boost employee morale.",
+                },
+                {
+                  term: "Añadir argumentos y razones",
+                  meaning:
+                    "Furthermore... / Moreover... / This is effective because...",
+                  example:
+                    "Furthermore, reducing commuting stress allows workers to focus better.",
+                },
+                {
+                  term: "Contrastar puntos de vista",
+                  meaning:
+                    "On the other hand... / While some argue that..., I believe...",
+                  example:
+                    "While some managers worry about remote work, clear goals ensure high productivity.",
+                },
+              ],
+            },
+            {
+              title:
+                "2. Estrategias Laborales que Mejoran la Productividad (Workplace Strategies)",
+              summary:
+                "Ideas y vocabulario clave que puedes usar para explicar cómo mejorar el rendimiento del personal:",
+              items: [
+                {
+                  term: "Flexible working hours & Remote options",
+                  meaning:
+                    "Horarios flexibles y teletrabajo: mejoran el equilibrio vida-trabajo (work-life balance) y reducen el agotamiento (burnout).",
+                  example:
+                    "Offering flexible hours helps staff work during their peak energy times.",
+                },
+                {
+                  term: "Employee recognition & Clear communication",
+                  meaning:
+                    "Reconocimiento al empleado y comunicación clara: aumentan la motivación y evitan errores.",
+                  example:
+                    "Regular feedback and recognition make employees feel valued.",
+                },
+                {
+                  term: "Ergonomic workspaces & Short breaks",
+                  meaning:
+                    "Espacios ergonómicos y pausas activas: previenen fatiga física y mantienen la concentración.",
+                  example:
+                    "Taking short breaks every two hours prevents mental fatigue.",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "8-1",
+              type: "mcq",
+              question:
+                "Which response best introduces and supports an opinion on how to improve workplace productivity?",
+              options: [
+                "In my view, offering flexible schedules boosts productivity because employees experience less burnout and manage their time more effectively.",
+                "I think work is okay and people should just do their jobs every day without complaining.",
+                "Productivity means working fast, and offices have desks and computers.",
+                "Managers are bosses and staff members have to follow rules.",
+              ],
+              answer: 0,
+              explanation:
+                "La primera opción usa un conector formal de opinión ('In my view'), propone una estrategia clara ('flexible schedules') y la justifica con una razón lógica ('because... less burnout').",
+            },
+            {
+              id: "8-2",
+              type: "mcq",
+              question:
+                "Select the best linking phrase to add a second supporting argument: 'Employee recognition increases motivation. ________, it reduces staff turnover in the company.'",
+              options: [
+                "Furthermore,",
+                "However,",
+                "Despite,",
+                "On the contrary,",
+              ],
+              answer: 0,
+              explanation:
+                "'Furthermore' (además) suma un segundo argumento positivo que refuerza la misma idea.",
+            },
+            {
+              id: "8-3",
+              type: "mcq",
+              question:
+                "A company notices staff are exhausted and making mistakes in the afternoon. Which strategy and explanation is most effective?",
+              options: [
+                "Implementing structured short breaks, as resting briefly restores concentration and prevents mental fatigue.",
+                "Canceling lunch breaks so employees stay at their desks longer.",
+                "Removing team communication so everyone works in total silence.",
+                "Increasing working hours without extra rest.",
+              ],
+              answer: 0,
+              explanation:
+                "Implementar pausas cortas ('structured short breaks') combate la fatiga mental y recupera la concentración.",
+            },
+          ],
+        },
+        {
+          id: 9,
+          shortTitle: "Escritura: Redacción de un Reporte Formal (A Report)",
+          officialIndicator: "To write a coherent and well-organized report.",
+          contents: "A report",
+          references: {
+            sb: "Writing task structure: Title, Subheadings, Formal Tone & Recommendations.",
+            wb: "Coherence, cohesion, passive structures, and formal register.",
+          },
+          icon: "fa-file-lines",
+          color: "sky",
+          studySections: [
+            {
+              title:
+                "1. Estructura Obligatoria de un Reporte Formal (Report Structure)",
+              summary:
+                "Un reporte en inglés SIEMPRE lleva título y subtítulos claros (subheadings) para organizar la información:",
+              items: [
+                {
+                  term: "1. Title (Título)",
+                  meaning:
+                    "Debe ser claro y objetivo. Ej: Report on Student Recycling Habits at Complejo Educativo Santa Lucía.",
+                  example: "Report on Improving Workplace Productivity",
+                },
+                {
+                  term: "2. Introduction (Introducción)",
+                  meaning:
+                    "Indica el propósito del reporte. Frase clave: 'The aim/purpose of this report is to evaluate/outline...'",
+                  example:
+                    "The purpose of this report is to evaluate current study facilities and suggest improvements.",
+                },
+                {
+                  term: "3. Body Paragraphs with Subheadings (Desarrollo)",
+                  meaning:
+                    "2 o 3 secciones con subtítulos (ej. Current Situation, Main Challenges). Usa tono objetivo y voz pasiva.",
+                  example:
+                    "Current Challenges: It was observed that many computers are outdated.",
+                },
+                {
+                  term: "4. Conclusion & Recommendations",
+                  meaning:
+                    "Resume hallazgos y da sugerencias concretas. Frase clave: 'In conclusion, it is strongly recommended that...'",
+                  example:
+                    "It is recommended that the school install additional Wi-Fi routers.",
+                },
+              ],
+            },
+            {
+              title: "2. Reglas de Estilo y Registro Formal (Register Rules)",
+              summary:
+                "Errores que debes evitar para no perder puntos en Writing:",
+              items: [
+                {
+                  term: "NO uses contracciones ni jerga",
+                  meaning:
+                    "Escribe 'do not' en lugar de 'don't'; 'it is' en lugar de 'it's'. Evita palabras informales como 'kids', 'a lot of', 'awesome'.",
+                  example:
+                    "Informal: 'Kids don't like the food.' → Formal: 'Students are dissatisfied with the cafeteria menu.'",
+                },
+                {
+                  term: "Usa conectores formales y voz pasiva",
+                  meaning:
+                    "In addition, Consequently, In order to, It is suggested that...",
+                  example: "A survey was conducted among 10th-grade students.",
+                },
+              ],
+            },
+          ],
+          exercises: [
+            {
+              id: "9-1",
+              type: "mcq",
+              question:
+                "Which sentence is the most appropriate opening line for the INTRODUCTION of a formal report?",
+              options: [
+                "The aim of this report is to evaluate current recreational facilities and propose practical improvements.",
+                "Hey everyone, I'm going to tell you about what I think of our school's sports courts!",
+                "In this essay, I will talk about why I love playing soccer with my friends.",
+                "You really need to fix the gym because it's super old and broken.",
+              ],
+              answer: 0,
+              explanation:
+                "'The aim of this report is to...' es la fórmula estándar, formal y objetiva para iniciar un reporte.",
+            },
+            {
+              id: "9-2",
+              type: "mcq",
+              question:
+                "Which of the following sentences uses an appropriate FORMAL register for a report?",
+              options: [
+                "A significant number of employees reported that noise levels negatively affect their concentration.",
+                "Lots of workers said it's way too noisy and they can't focus at all.",
+                "Honestly, the office is super loud and that's a huge bummer for the staff.",
+                "We shouldn't let people talk so loudly 'cause it's annoying.",
+              ],
+              answer: 0,
+              explanation:
+                "Evita contracciones ('it's', 'can't') y expresiones coloquiales ('lots of', 'super loud'), utilizando vocabulario preciso y formal.",
+            },
+            {
+              id: "9-3",
+              type: "mcq",
+              question:
+                "What is a defining visual feature of a well-organized English report compared to a standard essay?",
+              options: [
+                "It includes a clear title and distinct subheadings for each section.",
+                "It begins with 'Dear Sir or Madam' and ends with 'Yours faithfully'.",
+                "It uses exclamation marks and personal anecdotes throughout.",
+                "It is written as a single long paragraph without breaks.",
+              ],
+              answer: 0,
+              explanation:
+                "A diferencia de un ensayo o una carta, un reporte se caracteriza por tener un título y subtítulos ('subheadings') para cada apartado.",
+            },
+            {
+              id: "9-4",
+              type: "mcq",
+              question:
+                "Choose the strongest closing sentence for the RECOMMENDATIONS section of a report:",
+              options: [
+                "In conclusion, it is strongly recommended that management implement flexible hours to enhance overall efficiency.",
+                "So yeah, that's basically everything I wanted to say about the company.",
+                "I hope you liked reading my report and maybe you can change some stuff.",
+                "To sum up, workers don't like their schedules.",
+              ],
+              answer: 0,
+              explanation:
+                "'In conclusion, it is strongly recommended that...' cierra el reporte con autoridad, formalidad y una recomendación accionable.",
+            },
+          ],
+        },
+      ];
+
+      // Application State
+      let state = {
+        currentIndicatorIdx: 0,
+        currentTab: "study", // 'study' or 'practice'
+        answers: {}, // { questionId: { selected: any, isCorrect: boolean } }
+        hintsShown: {}, // { questionId: boolean }
+      };
+
+      // Load saved progress from localStorage if available
+      function loadState() {
+        try {
+          const saved = localStorage.getItem("santa_lucia_convo_prep_v1");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed === "object") {
+              state.answers = parsed.answers || {};
+              state.currentIndicatorIdx = parsed.currentIndicatorIdx || 0;
+            }
+          }
+        } catch (e) {
+          console.warn("Could not load saved state:", e);
+        }
+      }
+
+      // Save progress to localStorage
+      function saveState() {
+        try {
+          localStorage.setItem(
+            "santa_lucia_convo_prep_v1",
+            JSON.stringify({
+              answers: state.answers,
+              currentIndicatorIdx: state.currentIndicatorIdx,
+            }),
+          );
+        } catch (e) {
+          console.warn("Could not save state:", e);
+        }
+      }
+
+      // Calculate global and per-indicator stats
+      function getStats() {
+        let totalQuestions = 0;
+        let totalCorrect = 0;
+        const perIndicator = {};
+
+        indicatorsData.forEach((ind) => {
+          let indCorrect = 0;
+          let indAnswered = 0;
+          ind.exercises.forEach((ex) => {
+            totalQuestions++;
+            const ans = state.answers[ex.id];
+            if (ans) {
+              indAnswered++;
+              if (ans.isCorrect) {
+                indCorrect++;
+                totalCorrect++;
+              }
+            }
+          });
+          perIndicator[ind.id] = {
+            total: ind.exercises.length,
+            answered: indAnswered,
+            correct: indCorrect,
+            completed: indAnswered === ind.exercises.length,
+          };
+        });
+
+        return { totalQuestions, totalCorrect, perIndicator };
+      }
+
+      // Update top header progress bar and score badge
+      function updateProgressHeader() {
+        const { totalQuestions, totalCorrect } = getStats();
+        const percentage =
+          totalQuestions > 0
+            ? Math.round((totalCorrect / totalQuestions) * 100)
+            : 0;
+        document.getElementById("progress-text").textContent =
+          `${totalCorrect} / ${totalQuestions} pts`;
+        document.getElementById("progress-bar").style.width = `${percentage}%`;
+        document.getElementById("grade-badge").textContent = `${percentage}%`;
+      }
+
+      // Render Desktop Sidebar & Mobile Pill Bar
+      function renderNavigation() {
+        const desktopList = document.getElementById("desktop-nav-list");
+        const mobilePills = document.getElementById("mobile-nav-pills");
+        const { perIndicator } = getStats();
+
+        desktopList.innerHTML = "";
+        mobilePills.innerHTML = "";
+
+        indicatorsData.forEach((ind, idx) => {
+          const isActive = idx === state.currentIndicatorIdx;
+          const stat = perIndicator[ind.id];
+
+          // Status icon
+          let statusBadge = `<span class="text-xs font-semibold text-slate-400">${stat.correct}/${stat.total}</span>`;
+          if (stat.completed && stat.correct === stat.total) {
+            statusBadge = `<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-check mr-1"></i>${stat.correct}/${stat.total}</span>`;
+          } else if (stat.answered > 0) {
+            statusBadge = `<span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">${stat.correct}/${stat.total}</span>`;
+          }
+
+          // Desktop item
+          const btn = document.createElement("button");
+          btn.onclick = () => selectIndicator(idx);
+          btn.className = `w-full text-left px-4 py-3.5 transition flex items-start gap-3 ${
+            isActive
+              ? "bg-blue-50/90 border-l-4 border-blue-600"
+              : "hover:bg-slate-50 border-l-4 border-transparent"
+          }`;
+          btn.innerHTML = `
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold shrink-0 mt-0.5 ${
+            isActive ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600"
+          }">
+            ${ind.id}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider ${isActive ? "text-blue-700" : "text-slate-400"}">
+                Indicador ${ind.id}
+              </span>
+              ${statusBadge}
+            </div>
+            <p class="text-xs sm:text-sm font-semibold text-slate-800 line-clamp-2 mt-0.5">
+              ${ind.shortTitle}
+            </p>
+          </div>
+        `;
+          desktopList.appendChild(btn);
+
+          // Mobile pill
+          const pill = document.createElement("button");
+          pill.onclick = () => selectIndicator(idx);
+          pill.className = `px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 border ${
+            isActive
+              ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+              : stat.completed && stat.correct === stat.total
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
+          }`;
+          pill.innerHTML = `
+          <span>Ind. ${ind.id}</span>
+          ${stat.completed && stat.correct === stat.total ? '<i class="fa-solid fa-circle-check text-[11px]"></i>' : ""}
+        `;
+          mobilePills.appendChild(pill);
+        });
+      }
+
+      // Render Active Indicator Header & Content
+      function renderCurrentIndicator() {
+        const ind = indicatorsData[state.currentIndicatorIdx];
+        const { perIndicator } = getStats();
+        const stat = perIndicator[ind.id];
+
+        // Header Card
+        const headerCard = document.getElementById("indicator-header-card");
+        headerCard.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <i class="fa-solid ${ind.icon}"></i>
+            Indicador ${ind.id} de 9
+          </span>
+          <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+            ${ind.contents}
+          </span>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+          ${ind.shortTitle}
+        </h2>
+
+        <div class="mt-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200/90">
+          <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
+            <i class="fa-solid fa-bullseye text-blue-600 mr-1"></i>Official Exam Indicator:
+          </p>
+          <p class="text-sm font-medium text-slate-800 italic">
+            "${ind.officialIndicator}"
+          </p>
+        </div>
+
+        <!-- Study References Banner -->
+        <div class="mt-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-slate-600 bg-amber-50/70 border border-amber-200/80 px-3.5 py-2.5 rounded-xl">
+          <span class="font-bold text-amber-800 shrink-0">
+            <i class="fa-solid fa-book-bookmark mr-1"></i>Referencias:
+          </span>
+          <div class="flex flex-wrap gap-x-4 gap-y-1">
+            <span><strong>SB:</strong> ${ind.references.sb}</span>
+            <span><strong>WB:</strong> ${ind.references.wb}</span>
+          </div>
+        </div>
+      `;
+
+        // Update Tab Buttons Styling
+        const studyBtn = document.getElementById("tab-btn-study");
+        const practiceBtn = document.getElementById("tab-btn-practice");
+        const practiceCount = document.getElementById("tab-practice-count");
+        const ctaBtn = document.getElementById("switch-to-practice-cta");
+
+        practiceCount.textContent = `${stat.correct}/${stat.total}`;
+
+        if (state.currentTab === "study") {
+          studyBtn.className =
+            "flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all bg-blue-600 text-white shadow-sm";
+          practiceBtn.className =
+            "flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100";
+          practiceCount.className =
+            "ml-1 text-xs px-2 py-0.5 rounded-full bg-slate-200 text-slate-700";
+          ctaBtn.classList.remove("hidden");
+          renderStudyTab(ind);
+        } else {
+          practiceBtn.className =
+            "flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all bg-emerald-600 text-white shadow-sm";
+          studyBtn.className =
+            "flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100";
+          practiceCount.className =
+            "ml-1 text-xs px-2 py-0.5 rounded-full bg-emerald-800 text-white";
+          ctaBtn.classList.add("hidden");
+          renderPracticeTab(ind);
+        }
+
+        // Prev / Next buttons
+        document.getElementById("prev-ind-btn").disabled =
+          state.currentIndicatorIdx === 0;
+        document.getElementById("next-ind-btn").disabled =
+          state.currentIndicatorIdx === indicatorsData.length - 1;
+      }
+
+      // Render Tab 1: Spanish Explanation
+      function renderStudyTab(ind) {
+        const container = document.getElementById("tab-content-area");
+        let html = `<div class="space-y-4 fade-in">`;
+
+        ind.studySections.forEach((sec) => {
+          html += `
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+              <span class="w-2 h-6 rounded-full bg-blue-600 inline-block"></span>
+              ${sec.title}
+            </h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              ${sec.summary}
+            </p>
+            <div class="mt-4 grid grid-cols-1 gap-3">
+              ${sec.items
+                .map(
+                  (item) => `
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-blue-300 transition">
+                  <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                    <span class="text-sm font-extrabold text-blue-700">${item.term}</span>
+                    <span class="text-xs sm:text-sm font-semibold text-slate-700">${item.meaning}</span>
+                  </div>
+                  <div class="mt-2 pt-2 border-t border-slate-200/70 text-xs sm:text-sm text-slate-600 flex items-start gap-2">
+                    <i class="fa-solid fa-quote-left text-slate-400 mt-0.5 text-xs"></i>
+                    <span class="italic text-slate-800">${item.example}</span>
+                  </div>
+                </div>
+              `,
+                )
+                .join("")}
+            </div>
+          </div>
+        `;
+        });
+
+        html += `</div>`;
+        container.innerHTML = html;
+      }
+
+      // Render Tab 2: Interactive Practice Exercises
+      function renderPracticeTab(ind) {
+        const container = document.getElementById("tab-content-area");
+        const { perIndicator } = getStats();
+        const stat = perIndicator[ind.id];
+
+        let html = `<div class="space-y-5 fade-in">`;
+
+        // Optional Reading Passage for Indicators 6 & 7
+        if (ind.passage) {
+          html += `
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-5 sm:p-6 shadow-md border border-slate-700">
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2">
+              <i class="fa-solid fa-newspaper"></i>
+              <span>Texto de Comprensión — Léelo con atención antes de responder</span>
+            </div>
+            <h3 class="text-lg font-extrabold text-white mb-2">${ind.passage.title}</h3>
+            <p class="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
+              ${ind.passage.text}
+            </p>
+          </div>
+        `;
+        }
+
+        // Indicator Practice Score Banner
+        html += `
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase text-slate-400">Desempeño en este Indicador</p>
+              <p class="text-sm font-extrabold text-slate-800">
+                ${stat.correct} de ${stat.total} respuestas correctas
+              </p>
+            </div>
+          </div>
+          ${
+            stat.answered > 0
+              ? `
+            <button onclick="resetIndicatorProgress(${ind.id})" class="text-xs font-bold text-slate-600 hover:text-rose-600 bg-slate-100 hover:bg-rose-50 px-3 py-2 rounded-xl transition">
+              <i class="fa-solid fa-arrow-rotate-left mr-1"></i>Reintentar Indicador ${ind.id}
+            </button>
+          `
+              : ""
+          }
+        </div>
+      `;
+
+        // Render Each Question
+        ind.exercises.forEach((ex, qIdx) => {
+          const userAns = state.answers[ex.id];
+          html += `<div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">`;
+
+          if (ex.type === "mcq") {
+            html += `
+            <div class="flex items-start gap-3 mb-4">
+              <span class="w-7 h-7 rounded-lg bg-slate-900 text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-0.5">
+                ${qIdx + 1}
+              </span>
+              <p class="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                ${ex.question}
+              </p>
+            </div>
+            <div class="grid grid-cols-1 gap-2.5">
+              ${ex.options
+                .map((opt, optIdx) => {
+                  let btnStyle =
+                    "border-slate-200 bg-slate-50/70 hover:bg-blue-50/70 hover:border-blue-300 text-slate-800";
+                  let iconHtml = `<span class="w-6 h-6 rounded-full border border-slate-300 bg-white text-xs font-bold flex items-center justify-center shrink-0">${String.fromCharCode(65 + optIdx)}</span>`;
+
+                  if (userAns) {
+                    if (optIdx === ex.answer) {
+                      btnStyle =
+                        "border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold ring-1 ring-emerald-500";
+                      iconHtml = `<span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center shrink-0"><i class="fa-solid fa-check"></i></span>`;
+                    } else if (
+                      optIdx === userAns.selected &&
+                      !userAns.isCorrect
+                    ) {
+                      btnStyle =
+                        "border-rose-500 bg-rose-50 text-rose-950 font-semibold ring-1 ring-rose-500";
+                      iconHtml = `<span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></span>`;
+                    } else {
+                      btnStyle =
+                        "border-slate-200 bg-slate-50 text-slate-400 opacity-75";
+                    }
+                  }
+
+                  return `
+                  <button onclick="handleMcqAnswer('${ex.id}', ${optIdx}, ${ex.answer})"
+                    class="w-full text-left p-3.5 rounded-xl border transition flex items-center gap-3 text-sm ${btnStyle}">
+                    ${iconHtml}
+                    <span class="flex-1">${opt}</span>
+                  </button>
+                `;
+                })
+                .join("")}
+            </div>
+          `;
+          } else if (ex.type === "word_formation") {
+            const inputVal = userAns ? userAns.selected : "";
+            const isHintVisible = !!state.hintsShown[ex.id];
+            html += `
+            <div class="flex items-start gap-3 mb-3">
+              <span class="w-7 h-7 rounded-lg bg-amber-600 text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-0.5">
+                ${qIdx + 1}
+              </span>
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-amber-700">${ex.prompt}</p>
+                <p class="text-sm sm:text-base font-bold text-slate-900 mt-1 leading-relaxed">
+                  ${ex.sentenceBefore}
+                  <span class="inline-block px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs tracking-wider">
+                    [${ex.rootWord}]
+                  </span>
+                  ${ex.sentenceAfter}
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <input type="text" id="wf-input-${ex.id}" value="${inputVal}"
+                placeholder="Escribe la palabra transformada..."
+                onkeydown="if(event.key==='Enter') handleWordFormation('${ex.id}')"
+                class="flex-1 px-4 py-2.5 rounded-xl border text-sm font-semibold focus:outline-none focus:ring-2 ${
+                  userAns
+                    ? userAns.isCorrect
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-900 focus:ring-emerald-500"
+                      : "border-rose-500 bg-rose-50 text-rose-900 focus:ring-rose-500"
+                    : "border-slate-300 bg-white text-slate-900 focus:ring-blue-500"
+                }" />
+              <div class="flex items-center gap-2">
+                <button onclick="handleWordFormation('${ex.id}')"
+                  class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition">
+                  Comprobar
+                </button>
+                <button onclick="toggleHint('${ex.id}')"
+                  class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition" title="Ver pista">
+                  <i class="fa-regular fa-lightbulb mr-1 text-amber-500"></i>Pista
+                </button>
+              </div>
+            </div>
+
+            ${
+              isHintVisible
+                ? `
+              <p class="mt-2.5 text-xs text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+                <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i><strong>Pista:</strong> ${ex.hint}
+              </p>
+            `
+                : ""
+            }
+          `;
+          }
+
+          // Instant Spanish Pedagogical Feedback Box
+          if (userAns) {
+            html += `
+            <div class="mt-4 p-4 rounded-xl border text-xs sm:text-sm leading-relaxed fade-in ${
+              userAns.isCorrect
+                ? "bg-emerald-50/90 border-emerald-200 text-emerald-950"
+                : "bg-rose-50/90 border-rose-200 text-rose-950"
+            }">
+              <div class="font-extrabold flex items-center gap-2 mb-1">
+                ${
+                  userAns.isCorrect
+                    ? '<i class="fa-solid fa-circle-check text-emerald-600 text-base"></i><span>¡Excelente trabajo! Respuesta correcta.</span>'
+                    : `<i class="fa-solid fa-circle-xmark text-rose-600 text-base"></i><span>Revisa este punto. ${ex.type === "word_formation" ? `Respuesta esperada: <strong>${ex.acceptedAnswers[0]}</strong>.` : ""}</span>`
+                }
+              </div>
+              <p>${ex.explanation}</p>
+            </div>
+          `;
+          }
+
+          html += `</div>`;
+        });
+
+        // Interactive Report Checklist & Sandbox on Indicator 9
+        if (ind.id === 9) {
+          html += renderReportChecklistWidget();
+        }
+
+        html += `</div>`;
+        container.innerHTML = html;
+      }
+
+      // Extra Interactive Widget for Indicator 9 (Report Outline Verifier)
+      function renderReportChecklistWidget() {
+        return `
+        <div class="bg-white rounded-2xl border-2 border-dashed border-sky-300 p-5 sm:p-6 shadow-xs">
+          <div class="flex items-center gap-2 text-sky-700 font-extrabold text-base mb-2">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <span>Checklist Interactivo antes de entregar tu Reporte en el Examen</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mb-4">
+            Marca cada elemento conforme practiques redactar tu reporte en tu cuaderno para asegurar la nota máxima:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm">
+            <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-sky-50/60">
+              <input type="checkbox" class="w-4 h-4 accent-sky-600 rounded" />
+              <span><strong>Título formal</strong> claro y relacionado con el tema.</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-sky-50/60">
+              <input type="checkbox" class="w-4 h-4 accent-sky-600 rounded" />
+              <span><strong>Introducción:</strong> <em>"The purpose of this report is to..."</em></span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-sky-50/60">
+              <input type="checkbox" class="w-4 h-4 accent-sky-600 rounded" />
+              <span><strong>Subtítulos (Subheadings)</strong> en cada párrafo de desarrollo.</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-sky-50/60">
+              <input type="checkbox" class="w-4 h-4 accent-sky-600 rounded" />
+              <span><strong>Sin contracciones</strong> (usar <em>do not</em>, <em>it is</em>) ni jerga.</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-sky-50/60 sm:col-span-2">
+              <input type="checkbox" class="w-4 h-4 accent-sky-600 rounded" />
+              <span><strong>Conclusión y Recomendación:</strong> <em>"In conclusion, it is recommended that..."</em></span>
+            </label>
+          </div>
+        </div>
+      `;
+      }
+
+      // Handle Multiple Choice Answer Selection
+      function handleMcqAnswer(questionId, selectedIdx, correctIdx) {
+        state.answers[questionId] = {
+          selected: selectedIdx,
+          isCorrect: selectedIdx === correctIdx,
+        };
+        saveState();
+        updateProgressHeader();
+        renderNavigation();
+        renderCurrentIndicator();
+      }
+
+      // Handle Word Formation Typed Input
+      function handleWordFormation(questionId) {
+        const inputEl = document.getElementById(`wf-input-${questionId}`);
+        if (!inputEl) return;
+        const rawVal = inputEl.value.trim();
+        if (!rawVal) return;
+
+        const ind = indicatorsData[state.currentIndicatorIdx];
+        const ex = ind.exercises.find((e) => e.id === questionId);
+        if (!ex) return;
+
+        const isCorrect = ex.acceptedAnswers.some(
+          (ans) => ans.toLowerCase() === rawVal.toLowerCase(),
+        );
+
+        state.answers[questionId] = {
+          selected: rawVal,
+          isCorrect,
+        };
+        saveState();
+        updateProgressHeader();
+        renderNavigation();
+        renderCurrentIndicator();
+      }
+
+      // Toggle hint for word formation
+      function toggleHint(questionId) {
+        state.hintsShown[questionId] = !state.hintsShown[questionId];
+        renderCurrentIndicator();
+      }
+
+      // Reset progress for a single indicator
+      function resetIndicatorProgress(indId) {
+        const ind = indicatorsData.find((i) => i.id === indId);
+        if (!ind) return;
+        ind.exercises.forEach((ex) => {
+          delete state.answers[ex.id];
+        });
+        saveState();
+        updateProgressHeader();
+        renderNavigation();
+        renderCurrentIndicator();
+      }
+
+      // Navigation & Tab Controls
+      function selectIndicator(idx) {
+        state.currentIndicatorIdx = idx;
+        saveState();
+        renderNavigation();
+        renderCurrentIndicator();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function changeIndicator(delta) {
+        const nextIdx = state.currentIndicatorIdx + delta;
+        if (nextIdx >= 0 && nextIdx < indicatorsData.length) {
+          selectIndicator(nextIdx);
+        }
+      }
+
+      function switchTab(tabName) {
+        state.currentTab = tabName;
+        renderCurrentIndicator();
+      }
+
+      // Reset Modal Functions
+      function openResetModal() {
+        const modal = document.getElementById("reset-modal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function closeResetModal() {
+        const modal = document.getElementById("reset-modal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+
+      function confirmResetProgress() {
+        state.answers = {};
+        state.hintsShown = {};
+        saveState();
+        closeResetModal();
+        updateProgressHeader();
+        renderNavigation();
+        renderCurrentIndicator();
+      }
+
+      // Initialize Application
+      window.addEventListener("DOMContentLoaded", () => {
+        loadState();
+        updateProgressHeader();
+        renderNavigation();
+        renderCurrentIndicator();
+      });
+    </script>
+  </body>
+</html>
